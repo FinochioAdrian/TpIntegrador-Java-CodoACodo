@@ -53,6 +53,9 @@ public class Oradores extends javax.swing.JFrame {
 
         labelTema.setText("Tema");
 
+        inputID.setEditable(false);
+        inputID.setBackground(new java.awt.Color(204, 204, 204));
+
         InputTextAreaTema.setColumns(20);
         InputTextAreaTema.setRows(5);
         textAreaTemaScroll.setViewportView(InputTextAreaTema);
@@ -410,7 +413,6 @@ public class Oradores extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel labelID;
     private javax.swing.JLabel labelILastName;
