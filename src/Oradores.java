@@ -1,5 +1,13 @@
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.TableModel;
 
@@ -33,6 +41,8 @@ public class Oradores extends javax.swing.JFrame {
         btnUpdate = new java.awt.Button();
         btnDelete = new java.awt.Button();
         btnClean = new javax.swing.JButton();
+        btnCreateXML = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         table_oradores = new javax.swing.JTable();
@@ -93,6 +103,15 @@ public class Oradores extends javax.swing.JFrame {
             }
         });
 
+        btnCreateXML.setText("Crear XML");
+        btnCreateXML.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCreateXMLActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("By for Finochio Adrián E ");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -108,6 +127,8 @@ public class Oradores extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(btnClean)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnCreateXML)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -122,6 +143,10 @@ public class Oradores extends javax.swing.JFrame {
                             .addComponent(inputName)
                             .addComponent(inputID))
                         .addContainerGap(92, Short.MAX_VALUE))))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(57, 57, 57)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -151,8 +176,12 @@ public class Oradores extends javax.swing.JFrame {
                     .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(32, 32, 32)
-                .addComponent(btnClean)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnClean)
+                    .addComponent(btnCreateXML))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel2)
+                .addContainerGap())
         );
 
         labelILastName.getAccessibleContext().setAccessibleDescription("");
@@ -265,6 +294,8 @@ public class Oradores extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Datos insertados correctamente");
                 clear();
                 loadData();
+                
+                CrearXML();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -316,9 +347,11 @@ public class Oradores extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Datos modificados correctamente");
                 clear();
                 loadData();
+                CrearXML();
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            
 
         } else {
             JOptionPane.showMessageDialog(null, "No se encuentra el ID");
@@ -340,6 +373,7 @@ public class Oradores extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Datos eliminados correctamente");
                     clear();
                     loadData();
+                    CrearXML();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -364,6 +398,17 @@ public class Oradores extends javax.swing.JFrame {
 
 
     }//GEN-LAST:event_jScrollPane2MouseClicked
+
+    private void btnCreateXMLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateXMLActionPerformed
+        try {
+            // TODO add your handling code here:
+            CrearXML();
+        } catch (SQLException ex) {
+            Logger.getLogger(Oradores.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Oradores.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnCreateXMLActionPerformed
 
     /**
      * @param args the command line arguments
@@ -404,6 +449,7 @@ public class Oradores extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea InputTextAreaTema;
     private javax.swing.JButton btnClean;
+    private javax.swing.JButton btnCreateXML;
     private java.awt.Button btnDelete;
     private java.awt.Button btnGuardar;
     private java.awt.Button btnUpdate;
@@ -411,6 +457,7 @@ public class Oradores extends javax.swing.JFrame {
     private javax.swing.JTextField inputLastName;
     private javax.swing.JTextField inputName;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane2;
@@ -477,5 +524,73 @@ public class Oradores extends javax.swing.JFrame {
         }
         return true;
     }
+
+    public void CrearXML() throws SQLException, IOException {
+        
+                    String filePath = crearArchivo("oradoresXML.xml");
+                    Path path = Paths.get(filePath);
+                    Files.delete(path);
+
+       
+        
+
+        try {
+            pst = con.prepareStatement("Select * from oradores");
+            rs = pst.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        String line= "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
+        FileWriter cb = new FileWriter(filePath);
+        cb.write(line);
+         cb.close();
+       
+        line= "<Oradores>";
+        FileWriter fw = new FileWriter(filePath, true);
+        fw.write(line);
+        
+       
+        while (rs.next()) {
+            line = "<Orador> <ID>"+ rs.getString("ID")+"</ID><Nombre>" + rs.getString("Nombre") + "</Nombre> <Apellido>" 
+                    + rs.getString("Apellido") + "</Apellido> <Tema>" + rs.getString("Tema")+"</Tema></Orador>";
+            
+            fw.write(line);
+            
+            
+        } 
+        
+        line= "</Oradores>";
+        
+        fw.write(line);
+        fw.close();
+        
+        JOptionPane.showMessageDialog(null, "XML Creado correctamente en: "+filePath);
+    }
+    
+    
+    
+    public String crearArchivo (String nombreDelArchivo) {
+       File file = new File(nombreDelArchivo);
+
+       // Verificar si el archivo existe
+       if (!file.exists()) {
+           // Si el archivo no existe, intentar crearlo
+           try {
+               if (file.createNewFile()) {
+                  System.out.println("Archivo creado exitosamente");
+               } else {
+                  System.out.println("No se pudo crear el archivo");
+               }
+           } catch (IOException e) {
+               System.out.println("Un error ocurrió al crear el archivo");
+               e.printStackTrace();
+           }
+       } else {
+           System.out.println("El archivo ya existe");
+       }
+       System.out.println("Ruta del archivo: " + file.getAbsolutePath());
+       return file.getAbsolutePath();
+   }
 
 }
